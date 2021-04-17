@@ -1,5 +1,3 @@
-import pygame
-import pygame.freetype
 import numpy as np
 from collections import deque
 import random
@@ -11,11 +9,17 @@ class SnakeEnv:
 		# initialize gui
 		# ---------------------------------------------------
 		if gui:
+			# import required libraries
+			global pygame
+			import pygame
+			global freetype
+			import pygame.freetype as freetype
+
 			self.screen = pygame.display.set_mode((game_board_size*50, game_board_size*50))
 			pygame.display.set_caption("貪食蛇")
 			self.clock = pygame.time.Clock()
 			pygame.freetype.init()
-			self.score_font = pygame.freetype.Font("/Users/liaoyulun/PycharmProjects/Snake-AI/dist/fonts/font1.otf", 14)
+			self.score_font = pygame.freetype.Font("/Users/liaoyulun/PycharmProjects/Snake-AI/dist/fonts/font1.otf", 18)
 
 		# initialize game_board
 		# ---------------------------------------------------
