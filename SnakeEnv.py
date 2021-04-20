@@ -67,11 +67,13 @@ class SnakeEnv:
 		# reset snake
 		# ---------------------------------------------------
 		self.snake_pos.clear()
-		# init_snake_pos = [random.randint(1, self.game_board_size - 2), random.randint(1, self.game_board_size - 2)]
-		self.snake_pos.append([5, 5])
-		self.snake_pos.append(([5, 6]))
-		self.game_board[5][5] = 1
-		self.game_board[5][6] = 1
+		init_snake_pos = [random.randint(1, self.game_board_size - 2), random.randint(1, self.game_board_size - 2)]
+		# self.snake_pos.append([5, 5])
+		# self.snake_pos.append(([5, 6]))
+		# self.game_board[5][5] = 1
+		# self.game_board[5][6] = 1
+		self.snake_pos.append(init_snake_pos)
+		self.game_board[tuple(init_snake_pos)] = 1
 		self.snake_dir = np.zeros(4, int)  # one hot encoding up, down, left, right
 		self.snake_score = 0
 		# ---------------------------------------------------

@@ -43,13 +43,14 @@ def build_nn(n_actions, state_dim, lr):
     model = Sequential()
     model.add(Dense(256, activation='relu', input_shape=(state_dim, )))
     model.add(Dense(256, activation='relu'))
+    model.add(Dense(256, activation='relu'))
     model.add(Dense(n_actions))
     model.compile(optimizer=Adam(lr=lr), loss='mse')
     return model
 
 
 class Agent:
-    def __init__(self, alpha, gamma, n_actions, state_rank, epsilon=1.0, epsilon_dec=0.001, epsilon_min=0.00001, batch_size=1000, mem_size=100000):
+    def __init__(self, alpha, gamma, n_actions, state_rank, epsilon=1.0, epsilon_dec=0.001, epsilon_min=0.1, batch_size=5000, mem_size=100000):
         self.n_actions = n_actions
         self.epsilon = epsilon
         self.epsilon_dec = epsilon_dec
@@ -73,17 +74,18 @@ class Agent:
             rt = np.full(1, rt)
             done = np.full(1, done)
 
-        q_predict = self.q_eval.predict(st)
-        q_target = q_predict.copy()
-        q_next_predict = self.q_target.predict(next_st)
+        q_eval_predict = self.q_eval.predict(st)
+        q_eval_next_predict = self.q_eval.predict(next_st)
+        q_target = q_eval_predict.copy()
+        q_target_next_predict = self.q_target.predict(next_st)
         for i in range(0, len(q_target)):
-            q_target[i][np.argmax(at[i])] = self.gamma * (rt[i] + np.max(q_next_predict[i]))
+            q_target[i][np.argmax(at[i])] = self.gamma * (rt[i] + q_target_next_predict[i][np.argmax(q_eval_next_predict[i])])
             if done[i] == True:
                 q_target[i][np.argmax(at[i])] = rt[i]
 
         self.q_eval.fit(st, q_target, verbose=1)
         self.learn_ctr += len(q_target)
-        if self.learn_ctr > 20:
+        if self.learn_ctr > 100:
             self.copy_model()
             self.learn_ctr = 0
 
