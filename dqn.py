@@ -49,7 +49,7 @@ def build_nn(n_actions, state_dim):
 
 
 class Agent:
-    def __init__(self, alpha, gamma, n_actions, state_rank, epsilon=1.0, epsilon_dec=0.01, epsilon_min=0.00001, batch_size=1000, mem_size=100000):
+    def __init__(self, alpha, gamma, n_actions, state_rank, epsilon=1.0, epsilon_dec=0.001, epsilon_min=0.00001, batch_size=1000, mem_size=100000):
         self.n_actions = n_actions
         self.epsilon = epsilon
         self.epsilon_dec = epsilon_dec
@@ -77,7 +77,7 @@ class Agent:
         q_target = q_predict.copy()
         q_next_predict = self.q_target.predict(next_st)
         for i in range(0, len(q_target)):
-            q_target[i][np.argmax(at[i])] = self.gamma * (rt[i] + np.max(q_next_predict[i]))
+            q_target[i][np.argmax(at[i])] = self.gamma * (rt[i] + q_next_predict[i][np.argmax(at[i])])
             if done[i] == 1:
                 q_target[i][np.argmax(q_next_predict[i])] = rt[i]
 
