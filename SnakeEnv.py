@@ -181,6 +181,7 @@ def go(pathList):
 			env.render()
 			if env.step() == -1:
 				env.reset()
+#snake walk based on the pathList
 
 env = SnakeEnv(gui=True)
 pathList = Search(env.snake_pos[0])
