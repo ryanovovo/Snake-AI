@@ -20,7 +20,7 @@ class Search:
         root.level = 1
         pathList = self.treeGrow(rightNear, root)
         return pathList
-
+    #set start node and grow
 
     def findNeighbors(self, ori):
         neighborlist = []
@@ -34,8 +34,8 @@ class Search:
             neighborlist.append([x + 1, y])
         if ((y + 1) < 8):
             neighborlist.append([x, y + 1])
-
         return neighborlist
+    #find the neighbors of the node on the gameboard
 
     def treeGrow(self, rightNear, node):
         childPos = self.findNextMove(node)
@@ -49,22 +49,21 @@ class Search:
                 childNodes.append(childNode)
                 self.treeGrow(rightNear, childNode)
             node.childs = childNodes
-        else:
+     #recursion
 
-            if node.level == 64:
+        else:
+            if node.level == 64:    #the 64th step
                 print("last=>" + str(node.level))
                 lastPos = node.pos
                 lastPosString = str(lastPos[0])+","+str(lastPos[1])
                 print("lastPosString=>" + lastPosString)
-                end = False
                 for j in range(0, len(rightNear)):
                     near = rightNear[j]
                     nearPos = str(near[0])+","+str(near[1])
                     print("nearPos=>" + nearPos)
-                    if lastPosString == nearPos:
+                    if lastPosString == nearPos:    #the last step is next to the start
                         print("done:")
-                        pathList = self.dumpTree(node)
-                        end = True
+                        pathList = self.dumpTree(node)  #find the path
                         return pathList
 
 
@@ -73,7 +72,7 @@ class Search:
         pathList = []
         self.checkTreePathPos(pathList, node)
         return pathList
-
+    #called when done
 
     def findNextMove(self, node):
         neighbors = []
@@ -92,6 +91,7 @@ class Search:
                     break
             if noteExist == False:
                 neighbors.append(near)
+                #if near isn't in the pathList, then append.
         return neighbors
 
 
@@ -100,3 +100,4 @@ class Search:
         pathList.append(node.pos)
         if node.parent != None:
             self.checkTreePathPos(pathList, node.parent)
+    #find the path from the start to the current node
