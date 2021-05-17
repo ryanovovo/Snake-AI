@@ -63,12 +63,14 @@ for i in range(10000):
             break
 
         else:
-            rt -= step*0.01
-            dqn.memory.store(st, at, rt, next_st, done)
-            dqn.train(st, at, rt, next_st, done)
             if rt > 0:
+                dqn.memory.store(st, at, rt, next_st, done)
+                dqn.train(st, at, rt, next_st, done)
                 step = 0
             else:
+                rt -= step * 0.05
+                dqn.memory.store(st, at, rt, next_st, done)
+                dqn.train(st, at, rt, next_st, done)
                 step += 1
     dqn.save_model()
 
