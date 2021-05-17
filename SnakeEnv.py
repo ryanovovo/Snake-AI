@@ -19,7 +19,7 @@ class SnakeEnv:
 			pygame.display.set_caption("貪食蛇")
 			self.clock = pygame.time.Clock()
 			pygame.freetype.init()
-			self.score_font = pygame.freetype.Font("/Users/liaoyulun/PycharmProjects/Snake-AI/dist/fonts/font1.otf", 18)
+			self.score_font = pygame.freetype.Font("/Users/liaoyulun/PycharmProjects/Snake-AI/dist/fonts/font1.ttf", 18)
 
 		# initialize game_board
 		# ---------------------------------------------------

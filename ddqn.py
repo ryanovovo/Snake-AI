@@ -50,7 +50,7 @@ def build_nn(n_actions, state_dim, lr):
 
 
 class Agent:
-    def __init__(self, alpha, gamma, n_actions, state_rank, epsilon=1.0, epsilon_dec=0.001, epsilon_min=0.1, batch_size=5000, mem_size=100000):
+    def __init__(self, alpha, gamma, n_actions, state_rank, epsilon=1.0, epsilon_dec=0.001, epsilon_min=0.01, batch_size=5000, mem_size=100000):
         self.n_actions = n_actions
         self.epsilon = epsilon
         self.epsilon_dec = epsilon_dec
@@ -114,6 +114,7 @@ class Agent:
 
     def load_model(self):
         self.q_eval = tensorflow.keras.models.load_model("beta_model.h5")
+        self.q_target = tensorflow.keras.models.load_model("beta_model.h5")
 
     def copy_model(self):
         self.q_target.set_weights(self.q_eval.get_weights())
