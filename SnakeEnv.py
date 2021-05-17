@@ -3,9 +3,8 @@ from collections import deque
 import random
 import time
 
-
 class SnakeEnv:
-	def __init__(self, game_board_size=10, snake_color=(255, 0, 0), fruit_color=(0, 255, 0), gui=False):
+	def __init__(self, game_board_size=10, snake_color=(255, 0, 0), fruit_color=(0, 255, 0), gui = False):
 		# initialize gui
 		# ---------------------------------------------------
 		if gui:
@@ -68,10 +67,6 @@ class SnakeEnv:
 		# ---------------------------------------------------
 		self.snake_pos.clear()
 		init_snake_pos = [random.randint(1, self.game_board_size - 2), random.randint(1, self.game_board_size - 2)]
-		# self.snake_pos.append([5, 5])
-		# self.snake_pos.append(([5, 6]))
-		# self.game_board[5][5] = 1
-		# self.game_board[5][6] = 1
 		self.snake_pos.append(init_snake_pos)
 		self.game_board[tuple(init_snake_pos)] = 1
 		self.snake_dir = np.zeros(4, int)  # one hot encoding up, down, left, right
@@ -94,7 +89,7 @@ class SnakeEnv:
 		self.fruit_score = 1
 		self.game_board[tuple(self.fruit_pos)] = 2
 
-	def change_snake_dir(self, new_dir):  # new_dir should be one hot encoded
+	def change_snake_dir(self, new_dir): # new_dir should be one hot encoded
 		# change snake direction to new_dir
 		self.snake_dir = np.array(new_dir)
 
@@ -107,6 +102,7 @@ class SnakeEnv:
 		new_head = np.array(self.snake_pos[0]) + actions[np.argmax(self.snake_dir)]
 		if self.game_board[tuple(new_head)] == 1 or self.game_board[tuple(new_head)] == 3:
 			# collections
+			print(new_head)
 			return -1
 		elif self.game_board[tuple(new_head)] == 2:
 			# eaten a fruit
@@ -129,6 +125,7 @@ class SnakeEnv:
 		# ---------------------------------------------------
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
+				running = False
 				break
 		self.clock.tick(60)
 		self.screen.fill((255, 255, 255))
@@ -143,18 +140,18 @@ class SnakeEnv:
 				elif self.game_board[i][j] == 2:
 					pygame.draw.rect(self.screen, (0, 255, 0), (i * 50, j * 50, 50, 50))
 				elif self.game_board[i][j] == 3:
-					pygame.draw.rect(self.screen, (0, 0, 0), (i * 50, j * 50, 50, 50))
+					pygame.draw.rect(self.screen, (0, 0, 255), (i * 50, j * 50, 50, 50))
 		# ---------------------------------------------------
 
 		# show snake score on screen
 		# ---------------------------------------------------
-		self.score_font.render_to(self.screen, (1, 1), "Score:" + str(self.snake_score), (255, 255, 255), None, size=26)
+		self.score_font.render_to(self.screen, (1, 1), "Score:" + str(self.snake_score), (0, 0, 0), None, size=20)
 		pygame.display.update()
-		# time.sleep(0.2)  # move speed
+		time.sleep(0.3) # move speed
 		# ---------------------------------------------------
 
 	def keyboard_control(self):
-		# use keyboard manually control snake
+		# use keyboard manual control snake
 		for event in pygame.event.get():
 			if event.type == pygame.KEYDOWN:
 				if event.key == pygame.K_UP:
@@ -167,12 +164,3 @@ class SnakeEnv:
 					self.change_snake_dir([0, 0, 0, 1])
 
 
-'''
-env = SnakeEnv(gui=True)
-while True:
-	env.keyboard_control()
-	done = env.step()
-	env.render()
-	if done:
-		env.reset()
-'''
