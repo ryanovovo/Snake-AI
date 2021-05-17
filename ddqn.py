@@ -11,11 +11,11 @@ class Buffer:
     def __init__(self, mem_size, n_actions, state_rank):
         # init buffer
         self.mem_size = mem_size
-        self.state_mem = np.zeros((mem_size, state_rank), int)
-        self.action_mem = np.zeros((mem_size, n_actions), int)
-        self.reward_mem = np.zeros(mem_size, int)
-        self.next_state_mem = np.zeros((mem_size, state_rank), int)
-        self.terminal_mem = np.zeros(mem_size, int)
+        self.state_mem = np.zeros((mem_size, state_rank), float)
+        self.action_mem = np.zeros((mem_size, n_actions), float)
+        self.reward_mem = np.zeros(mem_size, float)
+        self.next_state_mem = np.zeros((mem_size, state_rank), float)
+        self.terminal_mem = np.zeros(mem_size, float)
         self.mem_ctr = 0
 
     def sample(self, batch_size):
@@ -99,7 +99,7 @@ class Agent:
             idx = random.randint(0, self.n_actions-1)
             action = self.action_space[idx]
         else:
-            action = self.q_eval.predict(st)
+            action = self.action_space[np.argmax(self.q_eval.predict(st))]
         if self.epsilon > self.epsilon_min:
             self.epsilon -= self.epsilon_dec
 
