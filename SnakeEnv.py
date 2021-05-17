@@ -2,7 +2,6 @@ import numpy as np
 from collections import deque
 import random
 import time
-from findpath import Search
 
 class SnakeEnv:
 	def __init__(self, game_board_size=10, snake_color=(255, 0, 0), fruit_color=(0, 255, 0), gui = False):
@@ -164,24 +163,4 @@ class SnakeEnv:
 				elif event.key == pygame.K_RIGHT:
 					self.change_snake_dir([0, 0, 0, 1])
 
-def go(pathList):
-	while True:
-		for i in range(0, len(pathList) - 1):
-			this = pathList[i]
-			next = pathList[i + 1]
-			if (this[0] > next[0]):
-				env.change_snake_dir([1, 0, 0, 0])
-			if (this[0] < next[0]):
-				env.change_snake_dir([0, 1, 0, 0])
-			if (this[1] > next[1]):
-				env.change_snake_dir([0, 0, 1, 0])
-			if (this[1] < next[1]):
-				env.change_snake_dir([0, 0, 0, 1])
-			env.step()
-			env.render()
-			if env.step() == -1:
-				env.reset()
 
-env = SnakeEnv(gui=True)
-pathList = Search(env.snake_pos[0])
-go(pathList)

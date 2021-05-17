@@ -1,4 +1,4 @@
-
+from SnakeEnv import SnakeEnv
 class Node:
     def __init__(self, parent, pos):
         self.parent = parent
@@ -100,3 +100,29 @@ class Search:
         pathList.append(node.pos)
         if node.parent != None:
             self.checkTreePathPos(pathList, node.parent)
+
+    #find the path from the start to the current node
+
+def go(pathList):
+    while True:
+        for i in range(0, len(pathList) - 1):
+            this = pathList[i]
+            next = pathList[i + 1]
+            if (this[0] > next[0]):
+                env.change_snake_dir([1, 0, 0, 0])
+            if (this[0] < next[0]):
+                env.change_snake_dir([0, 1, 0, 0])
+            if (this[1] > next[1]):
+                env.change_snake_dir([0, 0, 1, 0])
+            if (this[1] < next[1]):
+                env.change_snake_dir([0, 0, 0, 1])
+            env.step()
+            env.render()
+            if env.step() == -1:
+                env.reset()
+# snake walk based on the pathList
+
+# main
+env = SnakeEnv(gui=True)
+pathList = Search(env.snake_pos[0])
+go(pathList)
