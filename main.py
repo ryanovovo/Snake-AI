@@ -38,15 +38,16 @@ def convert():
 max_step = 100
 learn_cnt = 0
 score = 0
-# dqn.load_model()
-# dqn.epsilon = 0
+dqn.load_model()
+dqn.epsilon = 0
+
 for i in range(10000):
     env.reset()
     step = 0
     while step < max_step:
         env.render()
         st = convert()
-        print(st)
+        # print(st)
         at = dqn.choose_action(st)
         env.change_snake_dir(at)
         rt = env.step()
@@ -68,7 +69,7 @@ for i in range(10000):
                 dqn.train(st, at, rt, next_st, done)
                 step = 0
             else:
-                rt -= step * 0.05
+                rt -= step * 0.01
                 dqn.memory.store(st, at, rt, next_st, done)
                 dqn.train(st, at, rt, next_st, done)
                 step += 1
