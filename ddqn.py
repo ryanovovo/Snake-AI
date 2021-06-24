@@ -41,9 +41,8 @@ class Buffer:
 
 def build_nn(n_actions, state_dim, lr):
     model = Sequential()
-    model.add(Dense(256, activation='relu', input_shape=(state_dim, )))
-    model.add(Dense(256, activation='relu'))
-    model.add(Dense(256, activation='relu'))
+    model.add(Dense(80, activation='relu', input_shape=(state_dim, )))
+    model.add(Dense(40, activation='relu'))
     model.add(Dense(n_actions))
     model.compile(optimizer=Adam(lr=lr), loss='mse')
     return model

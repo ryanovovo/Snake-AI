@@ -68,10 +68,6 @@ class SnakeEnv:
 		# ---------------------------------------------------
 		self.snake_pos.clear()
 		init_snake_pos = [random.randint(1, self.game_board_size - 2), random.randint(1, self.game_board_size - 2)]
-		# self.snake_pos.append([5, 5])
-		# self.snake_pos.append(([5, 6]))
-		# self.game_board[5][5] = 1
-		# self.game_board[5][6] = 1
 		self.snake_pos.append(init_snake_pos)
 		self.game_board[tuple(init_snake_pos)] = 1
 		self.snake_dir = np.zeros(4, int)  # one hot encoding up, down, left, right
@@ -106,7 +102,7 @@ class SnakeEnv:
 			return 0
 		new_head = np.array(self.snake_pos[0]) + actions[np.argmax(self.snake_dir)]
 		if self.game_board[tuple(new_head)] == 1 or self.game_board[tuple(new_head)] == 3:
-			# collections
+			# collision
 			return -1
 		elif self.game_board[tuple(new_head)] == 2:
 			# eaten a fruit
