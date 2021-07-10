@@ -11,11 +11,7 @@ class Search:
     def __init__(self, start):
         self.start = start
         start = [start[0]-1, start[1]-1]
-        print(start)
-        print(type(start))
         rightNear = self.findNeighbors(start)
-        print("rightNear")
-        print(rightNear)
         root = Node(None, start)
         root.level = 1
         pathList = self.treeGrow(rightNear, root)
@@ -40,7 +36,6 @@ class Search:
     def treeGrow(self, rightNear, node):
         childPos = self.findNextMove(node)
         if len(childPos) > 0:
-            print("searching")
             childNodes = []
             for i in range(0,len(childPos)):
                 child = childPos[i]
@@ -50,23 +45,17 @@ class Search:
                 self.treeGrow(rightNear, childNode)
             node.childs = childNodes
         else:
-
             if node.level == 64:
-                print("last=>" + str(node.level))
                 lastPos = node.pos
                 lastPosString = str(lastPos[0])+","+str(lastPos[1])
-                print("lastPosString=>" + lastPosString)
                 end = False
                 for j in range(0, len(rightNear)):
                     near = rightNear[j]
                     nearPos = str(near[0])+","+str(near[1])
-                    print("nearPos=>" + nearPos)
                     if lastPosString == nearPos:
-                        print("done:")
                         pathList = self.dumpTree(node)
                         end = True
                         return pathList
-
 
 
     def dumpTree(self, node):
@@ -101,7 +90,6 @@ class Search:
         if node.parent != None:
             self.checkTreePathPos(pathList, node.parent)
 
-    #find the path from the start to the current node
 
 def go(pathList):
     while True:
@@ -120,7 +108,6 @@ def go(pathList):
             env.render()
             if env.step() == -1:
                 env.reset()
-# snake walk based on the pathList
 
 # main
 env = SnakeEnv(gui=True)
