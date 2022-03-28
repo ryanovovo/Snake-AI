@@ -1,4 +1,5 @@
 from SnakeEnv import SnakeEnv
+
 class Node:
     def __init__(self, parent, pos):
         self.parent = parent
@@ -9,31 +10,33 @@ class Node:
 
 class Search:
     def __init__(self, start):
+        self.end = False
         self.start = start
         start = [start[0]-1, start[1]-1]
         rightNear = self.findNeighbors(start)
         root = Node(None, start)
         root.level = 1
-        pathList = self.treeGrow(rightNear, root)
-        return pathList
-
+        self.treeGrow(rightNear, root)
+        self.go(finalPath)
 
     def findNeighbors(self, ori):
         neighborlist = []
         x = ori[0];
         y = ori[1];
-        if ((x - 1) >= 0 and (x - 1) < 8):
+        if ((x - 1) >= 0 and (x - 1) < size):
             neighborlist.append([x - 1,y])
-        if ((y - 1) >= 0 and (y - 1) < 8):
+        if ((y - 1) >= 0 and (y - 1) < size):
             neighborlist.append([x, y - 1])
-        if ((x + 1) < 8):
+        if ((x + 1) < size):
             neighborlist.append([x + 1, y])
-        if ((y + 1) < 8):
+        if ((y + 1) < size):
             neighborlist.append([x, y + 1])
 
         return neighborlist
 
     def treeGrow(self, rightNear, node):
+        if self.end:
+            return 0
         childPos = self.findNextMove(node)
         if len(childPos) > 0:
             childNodes = []
@@ -45,17 +48,17 @@ class Search:
                 self.treeGrow(rightNear, childNode)
             node.childs = childNodes
         else:
-            if node.level == 64:
+            if node.level == size*size:
                 lastPos = node.pos
                 lastPosString = str(lastPos[0])+","+str(lastPos[1])
-                end = False
                 for j in range(0, len(rightNear)):
                     near = rightNear[j]
                     nearPos = str(near[0])+","+str(near[1])
                     if lastPosString == nearPos:
-                        pathList = self.dumpTree(node)
-                        end = True
-                        return pathList
+                        global finalPath
+                        finalPath = self.dumpTree(node)
+                        self.end = True
+                        return 0
 
 
     def dumpTree(self, node):
@@ -90,26 +93,39 @@ class Search:
         if node.parent != None:
             self.checkTreePathPos(pathList, node.parent)
 
+    def go(self,pathList):
+        temp = pathList[len(pathList) - 1]
+        for j in range(0, len(pathList)-1):
+            j = len(pathList) - 1 - j
+            pathList[j] = pathList[j-1]
+        pathList[0] = temp
+        print(pathList)
+        while True:
+            for i in range(0, len(pathList)):
+                env.render()
+                if i == len(pathList)-1:
+                    this = pathList[i]
+                    next = pathList[0]
+                else:
+                    this = pathList[i]
+                    next = pathList[i + 1]
+                if (this[0] > next[0]):
+                    env.change_snake_dir([0, 0, 1, 0])
+                if (this[0] < next[0]):
+                    env.change_snake_dir([0, 0, 0, 1])
+                if (this[1] > next[1]):
+                    env.change_snake_dir([1, 0, 0, 0])
+                if (this[1] < next[1]):
+                    env.change_snake_dir([0, 1, 0, 0])
+                if env.step() == -1:
+                    env.reset()
 
-def go(pathList):
-    while True:
-        for i in range(0, len(pathList) - 1):
-            this = pathList[i]
-            next = pathList[i + 1]
-            if (this[0] > next[0]):
-                env.change_snake_dir([1, 0, 0, 0])
-            if (this[0] < next[0]):
-                env.change_snake_dir([0, 1, 0, 0])
-            if (this[1] > next[1]):
-                env.change_snake_dir([0, 0, 1, 0])
-            if (this[1] < next[1]):
-                env.change_snake_dir([0, 0, 0, 1])
-            env.step()
-            env.render()
-            if env.step() == -1:
-                env.reset()
 
 # main
-env = SnakeEnv(gui=True)
-pathList = Search(env.snake_pos[0])
-go(pathList)
+size = 4
+path = []
+env = SnakeEnv(game_board_size=size+2, gui=True)
+print(env.snake_pos[0])
+Search(env.snake_pos[0])
+
+
